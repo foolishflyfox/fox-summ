@@ -1,0 +1,5 @@
+server:
+  port: 2150
+spring:
+  application:
+    name: java-call-python-test
