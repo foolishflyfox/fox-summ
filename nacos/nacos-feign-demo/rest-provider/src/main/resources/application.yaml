@@ -1,0 +1,10 @@
+server:
+  port: 2001
+spring:
+  application:
+    name: rest-provider
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      username: nacos
+      password: nacos

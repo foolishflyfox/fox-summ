@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <encoding>UTF-8</encoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <groupId>com.bfh</groupId>
+    <artifactId>usage-lib</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bfh</groupId>
+            <artifactId>foo</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+<!--    com.bfh.bar-sub-a 不能被引入，因为该项目是在子模块中执行    -->
+<!--        <dependency>-->
+<!--            <groupId>com.bfh</groupId>-->
+<!--            <artifactId>bar-sub-a</artifactId>-->
+<!--            <version>0.0.1</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.bfh</groupId>
+            <artifactId>bar-sub-b</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+<!--    com.bfh.baz-a 能够引用，虽然也是子模块，但是在父模块中运行了 mvn install    -->
+        <dependency>
+            <groupId>com.bfh</groupId>
+            <artifactId>baz-a</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>aout</finalName>
+        <plugins>
+            <!-- Includes the runtime dependencies -->
+            <plugin>
+                <groupId>com.jolira</groupId>
+                <artifactId>onejar-maven-plugin</artifactId>
+                <version>1.4.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>one-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.bfh.usagelib.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
