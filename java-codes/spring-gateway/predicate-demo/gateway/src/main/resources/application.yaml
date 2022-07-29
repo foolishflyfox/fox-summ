@@ -2,12 +2,33 @@ spring:
   cloud:
     gateway:
       routes:
+#        - id: bar-route
+#          uri: http://localhost:2002
+#          predicates:
+#            - Weight=group1, 2
         - id: foo-route
           uri: http://localhost:2001
           predicates:
+# 测试权重配置
+            - Weight=group1, 1
+# 测试请求参数，键值对完全匹配，例如  curl http://localhost:2000/foo\?baz\=1
+#            - Query=baz, 1
+# 测试请求参数，键匹配，例如  curl http://localhost:2000/foo\?baz\=2
+#            - Query=baz
+# 测试 Header，即 curl -H "name: fff" localhost:2000/foo 可以路由
+#            - Header=name, fff
+# 测试 Cookie，请求必须在 Cookie 中带上 name=fff ，即 curl --cookie "name=fff" localhost:2000/foo
+#            - Cookie=name,fff
+# 测试 Between，在指定时间段内可以路由，其他时间不能不能路由
+#            - Between=2022-07-30T05:13:30.255+08:00[Asia/Shanghai],2022-07-30T05:14:00.255+08:00[Asia/Shanghai]
+# 测试 After，在指定时间后可以路由，指定时间前不能路由
+#            - After=2022-07-30T05:11:20.255+08:00[Asia/Shanghai]
+# 测试 Before，在指定时间前可以路由，指定时间后不能路由
+#            - Before=2022-07-30T05:08:00.255+08:00[Asia/Shanghai]
+# 测试 Path 匹配
 #            - Path=/foo/**,/g*/*
-# 测试多个配置为与的关系
-            - Path=/foo/**
-            - Method=GET,POST
+# 测试多个配置为与的关系-
+#            - Path=/foo/**
+#            - Method=GET,POST
 server:
   port: 2000
