@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        prefix: demo
+        file-extension: yaml
+      server-addr: localhost:8848
