@@ -1,0 +1,22 @@
+server:
+  port: 2000
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: foo-path
+          uri: http://localhost:2001
+          predicates:
+            - Path=/foo
+          filters:
+            - Token=true
+        - id: bar-path
+          uri: http://localhost:2001
+          predicates:
+            - Path=/bar
+          filters:
+            - Token=false
+        - id: baz-path
+          uri: http://localhost:2001
+          predicates:
+            - Path=/baz

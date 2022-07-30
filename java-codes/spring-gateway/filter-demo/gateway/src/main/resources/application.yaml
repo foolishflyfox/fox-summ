@@ -1,0 +1,57 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: test-filter
+          uri: http://localhost:2001
+          predicates:
+            - Method=GET,POST
+            - Path=/header,/response
+          filters:
+            - AddRequestHeader=name,fff   # 为 header 中添加 name = fff
+            - RemoveRequestHeader=user-agent   # 为 header 删除 user-agent 字段
+            - AddResponseHeader=school,ustc   # 为 response 添加 school = ustc
+            - RemoveResponseHeader=Date    # 为 response 删除 Date 字段
+            - SetResponseHeader=pos,shh    # 为 response 修改 pos 字段(无则添加，有则修改)
+            - DedupeResponseHeader=age    # 删除重复的响应头
+#            - SetResponseHeader=age,19    # 存在去重的功能，即如果响应中有2个 age=18，最终间变为一个 age=19
+        - id: test-add-params
+          uri: http://localhost:2001
+          predicates:
+            - Path=/params
+          filters:
+            - AddRequestParameter=foo, bar
+            - AddRequestParameter=name, foolishflyfox
+        - id: test-path
+          uri: http://localhost:2001
+          predicates:
+            - Path=/test/**
+          filters:
+            - PrefixPath=/path
+        - id: test-rewrite-path
+          uri: http://localhost:2001
+          predicates:
+            - Path=/apple/**
+          filters:
+            - RewritePath=/apple/(?<segment>.*),/$\{segment}
+        - id: test-set-path
+          uri: http://localhost:2001
+          predicates:
+            -  Path=/apple/{p1}
+          filters:
+            - SetPath=/{p1}
+        - id: test-set-status
+          uri: http://localhost:2001
+          predicates:
+            - Path=/status
+          filters:
+            - SetStatus=404
+        - id: foo
+          uri: http://localhost:2001
+          predicates:
+            - Path=/foo/**
+          filters:
+            - StripPrefix=1
+
+server:
+  port: 2000

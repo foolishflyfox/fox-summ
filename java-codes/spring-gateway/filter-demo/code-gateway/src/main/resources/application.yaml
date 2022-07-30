@@ -1,0 +1,18 @@
+server:
+  port: 2000
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: add-response
+          predicates:
+            - Path=/response
+          filters:
+            - AddResponseHeader=school, ustc
+          uri: http://localhost:2001
+        - id: change-header2
+          uri: http://localhost:2001
+          predicates:
+            - Path=/header
+          filters:
+            - AddRequestHeader=name, fhb

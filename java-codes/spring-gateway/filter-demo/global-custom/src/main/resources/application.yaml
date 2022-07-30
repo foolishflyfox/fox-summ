@@ -1,0 +1,10 @@
+server:
+  port: 2000
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: global-filter
+          uri: http://localhost:2001
+          predicates:
+            - Path=/status
