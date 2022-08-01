@@ -9,13 +9,13 @@ spring:
           predicates:
             - Path=/foo
           filters:
-            - Token=true
+            - Token=true  # 自定义过滤器配置中出入的参数为 true
         - id: bar-path
           uri: http://localhost:2001
           predicates:
             - Path=/bar
           filters:
-            - Token=false
+            - Token=false  # 自定义过滤器配置中传入的参数为 false
         - id: baz-path
           uri: http://localhost:2001
           predicates:

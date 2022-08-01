@@ -196,4 +196,176 @@ hello
 
 ## 自定义过滤器工厂
 
+gateway 内置的过滤器，其实是一个个的过滤器工厂，下面我们也写一个简单的关于认证的过滤器工厂，并将其配置到 application.yaml 文件中完成认证功能。
+
+### 创建自定义过滤器工厂
+
+自定义过滤器工厂需要实现 AbstractGatewayFilterFactory 类，这个一个泛型抽象类。其中的泛型类型是一个配置类，用于接收来自 application.yaml 的关于过滤器的配置。配置类通常定义为过滤器工厂的一个内部类，并且定义 get 和 set 方法。
+
+```java
+package com.bfh;
+
+import lombok.Data;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpStatus;
+import reactor.core.publisher.Mono;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class TokenGatewayFilterFactory extends AbstractGatewayFilterFactory<TokenGatewayFilterFactory.Config> {
+
+    /**
+     * 用于设置配置参数，如果不设置，将不能从 yaml 文件获取配置
+     */
+    @Override
+    public List<String> shortcutFieldOrder() {
+        return Arrays.asList("withAuth");
+    }
+
+    public TokenGatewayFilterFactory() {
+        // 需要调用一下父类
+        super(Config.class);
+    }
+
+    @Override
+    public GatewayFilter apply(Config config) {
+
+        return (exchange, chain) -> {
+            String username = exchange.getRequest().getHeaders().getFirst("username");
+            String password = exchange.getRequest().getHeaders().getFirst("password");
+            // pre 调用
+            exchange.getResponse().getHeaders().set("startToken", TokenGatewayFilterFactory.now());
+            if (config.isWithAuth() && !isValidUser(username, password)) {
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
+            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                // post 时调用
+                exchange.getResponse().getHeaders().set("endToken", TokenGatewayFilterFactory.now());
+            }));
+        };
+    }
+
+    /**
+     * 校验逻辑，应该根据业务功能自定义其中的代码，被apply函数调用
+     */
+    private boolean isValidUser(String username, String password) {
+        Map<String, String> users = new HashMap<>();
+        users.put("fff", "123");
+        users.put("abc", "000");
+        if (!users.containsKey(username)) return false;
+        return users.get(username).equals(password);
+    }
+
+    static public String now() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+    }
+
+    /**
+     * 配置类，在 yaml 中的 filters 设置中配置 Token: true，则 withAuth 值为true
+     */
+    @Data
+    public static class Config {
+        private boolean withAuth;
+    }
+}
+```
+
+### 将自定义过滤器加入到 Spring 容器中
+
+```java
+    @Bean
+    public TokenGatewayFilterFactory tokenGatewayFilterFactory() {
+        return new TokenGatewayFilterFactory();
+    }
+```
+
+### 在 application.yaml 中使用自定义过滤器
+
+```yaml
+server:
+  port: 2000
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: foo-path
+          uri: http://localhost:2001
+          predicates:
+            - Path=/foo
+          filters:
+            - Token=true  # 自定义过滤器配置中出入的参数为 true
+        - id: bar-path
+          uri: http://localhost:2001
+          predicates:
+            - Path=/bar
+          filters:
+            - Token=false  # 自定义过滤器配置中传入的参数为 false
+        - id: baz-path
+          uri: http://localhost:2001
+          predicates:
+            - Path=/baz
+```
+
+### 验证
+
+#### 验证自定义过滤器传入参数为 true
+
+```shell
+# foo 需要校验，没有传入用户名和密码，返回 401
+$ curl -i http://localhost:2000/foo
+HTTP/1.1 401 Unauthorized
+startToken: 2022-08-01 08:18:05.376
+content-length: 0
+
+# 用户名或密码错误，返回 401
+$ curl -i -H "username:fff" -H "password:000" http://localhost:2000/foo
+HTTP/1.1 401 Unauthorized
+startToken: 2022-08-01 08:19:22.582
+content-length: 0
+
+# 用户名和密码正确
+$ curl -i -H "username:fff" -H "password:123" http://localhost:2000/foo
+HTTP/1.1 200 OK
+startToken: 2022-08-01 08:20:10.745
+foo: 2022-08-01 08:20:11.164
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 10
+Date: Mon, 01 Aug 2022 00:20:11 GMT
+endToken: 2022-08-01 08:20:11.216
+
+hello, foo
+```
+
+#### 验证自定义过滤器传入参数为 false
+
+```shell
+# startToken 和 endToken 表名经过了完整的自定义过滤器，只是因为参数是 false，没进行认证
+$ curl -i http://localhost:2000/bar
+HTTP/1.1 200 OK
+startToken: 2022-08-01 08:21:46.463
+bar: 2022-08-01 08:21:46.485
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 10
+Date: Mon, 01 Aug 2022 00:21:46 GMT
+endToken: 2022-08-01 08:21:46.490
+
+hello, bar
+```
+
+#### 验证未设置自定义过滤器
+
+```shell
+# startToken 和 endToken 没有被设置，标明没有使用自定义过滤器
+$ curl -i http://localhost:2000/baz                                    
+HTTP/1.1 200 OK
+baz: 2022-08-01 08:24:01.192
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 10
+Date: Mon, 01 Aug 2022 00:24:01 GMT
+
+hello, baz
+```
 

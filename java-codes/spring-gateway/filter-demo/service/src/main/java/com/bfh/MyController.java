@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
 
@@ -61,17 +63,24 @@ public class MyController {
     }
 
     @GetMapping("/foo")
-    public String foo() {
+    public String foo(HttpServletResponse response) {
+        response.setHeader("foo", now());
         return "hello, foo";
     }
 
     @GetMapping("/bar")
-    public String bar() {
+    public String bar(HttpServletResponse response) {
+        response.setHeader("bar", now());
         return "hello, bar";
     }
 
     @GetMapping("/baz")
-    public String baz() {
+    public String baz(HttpServletResponse response) {
+        response.setHeader("baz", now());
         return "hello, baz";
+    }
+
+    static public String now() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
     }
 }
