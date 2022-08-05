@@ -1,3 +1,6 @@
+# 概述
+
+## java 
 
 - **maven**:
     - *maven-install.md*: 分析 `mvn install` 命令的使用与效果
@@ -8,5 +11,16 @@
     - *web-default-params.md*: 实践 web 的默认参数
 - **spring-gateway**
     - *predicate-demo.md*: 实践 spring cloud gateway 中断言的使用
-- **spring-filter**
     - *filter-demo.md*: 实践 spring cloud gateway 中过滤器的使用
+- **auth**: 认证与安全相关的内容
+    - *jwt-auth0.md*: 实践 jwt 在 java 下的编程
+- *spring-cloud-alibaba.md*: 记录 spring cloud alibaba 的版本依赖
+
+## shell
+
+参考：
+
+- [study shell](https://chu888chu888.gitbooks.io/shellstudy/content/chapter1.html)
+
+- *script-program-if.md*: if 语句的使用
+
