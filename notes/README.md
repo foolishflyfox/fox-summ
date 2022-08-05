@@ -9,6 +9,7 @@
     - *nacos-python.md*: 将 基于 flask 的 python restful 服务集成到 nacos 中，并用 java 实现远程调用
 - **spring-web**
     - *web-default-params.md*: 实践 web 的默认参数
+    - *springboot-knife4j.md*: 实践 springboot 整合 knife4j
 - **spring-gateway**
     - *predicate-demo.md*: 实践 spring cloud gateway 中断言的使用
     - *filter-demo.md*: 实践 spring cloud gateway 中过滤器的使用
