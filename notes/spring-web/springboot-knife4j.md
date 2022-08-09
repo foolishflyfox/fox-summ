@@ -15,7 +15,6 @@
 第二步：创建Swagger配置类
 
 ```java
-package com.bfh.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
