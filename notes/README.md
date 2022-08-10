@@ -15,6 +15,8 @@
     - *filter-demo.md*: 实践 spring cloud gateway 中过滤器的使用
 - **auth**: 认证与安全相关的内容
     - *jwt-auth0.md*: 实践 jwt 在 java 下的编程
+- **database**: 数据库操作相关的内容
+    - *mybatis-plus.md*: 实践 mybatis-plus 的使用
 - *spring-cloud-alibaba.md*: 记录 spring cloud alibaba 的版本依赖
 
 ## shell
