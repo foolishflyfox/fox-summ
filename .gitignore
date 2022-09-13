@@ -1,2 +1,6 @@
 **/.DS_Store
 **/.idea
+**/node_modules
+frontend-codes/**/dist
+frontend-codes/**/package-lock.json
+
