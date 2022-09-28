@@ -1,9 +1,11 @@
 
 - 书籍
- 1. - x] JavaScript 权威指南(第7版)
+    1. [ ] JavaScript 权威指南(第7版)
+    2. [ ] [ES6 入门教程](https://es6.ruanyifeng.com/)
+- 源码
+    1. [ ] [go-view](https://gitee.com/dromara/go-view)
+    2. [ ] RuoYi
+        1. [ ] [前端 RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3)
+        2. [ ] [后端 RuoYi-Vue-fast](https://github.com/yangzongzhuan/RuoYi-Vue-fast)
 
-1. - [ ] 记得找个女朋友
-2. 天凉了，记得加衣喔
 
-- [x] 今日份单词打卡
-- [x] 了解tree shaking和dce
