@@ -1,4 +1,3 @@
-
 ## ubuntu20.04
 
 Q1: 执行 `apt-get install xxx` 总是显示 `‘The package needs to be reinstalled, but I can’t find an archive for it’`。
