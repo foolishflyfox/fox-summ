@@ -3,6 +3,7 @@ module.exports = {
   arrowParens: "avoid",
   // 大括号内的收尾是否加空格, true: 默认加,`{ a: 1 }`; false: 不加, `{a: 1}`
   bracketSpacing: true,
+  // 行尾符号: lf: `\n`, `crlf`: `\r\n`, `cr`
   endOfLine: "lf",
   htmlWhitespaceSensitivity: "css",
   insertPragma: false,
